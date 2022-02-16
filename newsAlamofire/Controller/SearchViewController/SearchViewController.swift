@@ -8,24 +8,22 @@
 
 import UIKit
 
-class SearchViewController: UIViewController, MainCoordinated, NewsManagerDelegate {
+class SearchViewController: UIViewController {
     
     //MARK: - Outlets
-    @IBOutlet weak var cityPicker: UIPickerView!
-    @IBOutlet weak var ricercaBtn: UIButton!
     
+    @IBOutlet weak var pickerView: UIPickerView!
+    @IBOutlet weak var searchButton: UIButton!
     
     //MARK: - Properties
-    var mainCoordinator: MainCoordinator?
-    var newManager: NewsManager?
     
+    private let viewModel = SearchViewModel()
+    private var selected: Int = 0
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        cityPicker.delegate = self
-        cityPicker.dataSource = self
-        cityPicker.setValue(UIColor.white, forKey: "textColor") 
+        setup()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,62 +31,53 @@ class SearchViewController: UIViewController, MainCoordinated, NewsManagerDelega
         navigationController?.navigationBar.isHidden = true
     }
     
-    //MARK: - Navigation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        mainCoordinator?.configure(viewController: segue.destination)
+    private func setup() {
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        pickerView.setValue(UIColor.white, forKey: "textColor")
+        pickerView.selectRow(0, inComponent: 0, animated: true)
     }
     
     //MARK: - Actions
     
-    @IBAction func ricercaBtnWasPressed(_ sender: Any) {
-        if newManager?.inizialeCittà == nil && newManager?.nomeCittà == nil {
-            newManager?.inizialeCittà = newManager?.citiesContainer[cityPicker.selectedRow(inComponent: 0)].inizial
-            newManager?.nomeCittà = newManager?.citiesContainer[cityPicker.selectedRow(inComponent: 0)].rawValue
-        }
-        
-        mainCoordinator?.searchForNewsDidPressed(self)
+    @IBAction func searchButtonWasPressed(_ sender: Any) {
+        let city = viewModel.getInitialOfCityNameAt(selected)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        var controller = storyboard.instantiateViewController(withIdentifier: "NewsViewController") as? NewsViewController
+        controller = NewsViewController(city: city)
+        navigationController?.pushViewController(controller!, animated: true)
     }
 }
 
-
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
 extension SearchViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return newManager?.citiesContainer.count ?? 0
+        return viewModel.cities.count
     }
     
-    
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return newManager?.citiesContainer[row].rawValue
+        return viewModel.getCityNameAtIndex(row)
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
-        newManager?.inizialeCittà = newManager?.citiesContainer[row].inizial
-        newManager?.nomeCittà = newManager?.citiesContainer[row].rawValue
+        selected = row
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        
-        var pickerLabel: UILabel? = (view as? UILabel)
-        
-        if pickerLabel == nil {
-            pickerLabel = UILabel()
-            pickerLabel?.font = UIFont(name: "Avenir", size: 30)
-            pickerLabel?.textAlignment = .center
+        var label = UILabel()
+        if let pickerLabel = (view as? UILabel) {
+            label = pickerLabel
+        } else {
+            label.font = UIFont(name: "Avenir", size: 30)
+            label.textAlignment = .center
         }
-        
-        pickerLabel?.text = newManager?.citiesContainer[row].rawValue
-        pickerLabel?.textColor = UIColor.white
-        
-        return pickerLabel!
+        label.text = viewModel.getCityNameAtIndex(row)
+        label.textColor = UIColor.white
+        return label
     }
-    
 }
-
 

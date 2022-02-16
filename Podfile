@@ -6,8 +6,8 @@ target 'newsAlamofire' do
   use_frameworks!
   
   # Pods for newsAlamofire
-  pod 'SwiftyJSON'
-  pod 'Alamofire'
+#  pod 'SwiftyJSON'
+ # pod 'Alamofire'
   pod 'lottie-ios'
   
   target 'newsAlamofireTests' do

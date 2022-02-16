@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import Alamofire
-import SwiftyJSON
+//import Alamofire
+//import SwiftyJSON
 import SafariServices
-import Lottie
+//import Lottie
 
 class NewsViewController: UIViewController, MainCoordinated, NewsManagerDelegate {
     
@@ -25,23 +25,28 @@ class NewsViewController: UIViewController, MainCoordinated, NewsManagerDelegate
     var newManager: NewsManager?
     var getNewsFromJSON: GetNewsFromJSON?
     var dataSource: NewsDataSource?
-    private var loadingView = AnimationView()
+//    private var loadingView = AnimationView()
     
     var state: State = .loading {
         didSet {
             switch state {
             case .loading:
-                let animation = Animation.named("news")
-                setupAnimation(for: animation!)
+            //    let animation = Animation.named("news")
+               // setupAnimation(for: animation!)
                 containerView.isHidden = false
             case .setupUI:
-                loadingView.stop()
+                //loadingView.stop()
                 containerView.isHidden = true
             }
         }
     }
     
     //MARK: - Lifecycle
+    
+    convenience init(city: String) {
+        self.init(nibName: nil, bundle: nil)
+        print("-----> \(city)")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,19 +89,19 @@ class NewsViewController: UIViewController, MainCoordinated, NewsManagerDelegate
     
     //MARK: - Actions
 
-    func setupAnimation(for animation: Animation) {
-        loadingView.frame = animation.bounds
-        loadingView.animation = animation
-        loadingView.contentMode = .scaleAspectFill
-        lottieContainer.addSubview(loadingView)
-        loadingView.backgroundBehavior = .pauseAndRestore
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
-        loadingView.topAnchor.constraint(equalTo: lottieContainer.topAnchor).isActive = true
-        loadingView.bottomAnchor.constraint(equalTo: lottieContainer.bottomAnchor).isActive = true
-        loadingView.trailingAnchor.constraint(equalTo: lottieContainer.trailingAnchor).isActive = true
-        loadingView.leadingAnchor.constraint(equalTo: lottieContainer.leadingAnchor).isActive = true
-        self.loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
-    }
+  //  func setupAnimation(for animation: Animation) {
+//        loadingView.frame = animation.bounds
+//        loadingView.animation = animation
+//        loadingView.contentMode = .scaleAspectFill
+//        lottieContainer.addSubview(loadingView)
+//        loadingView.backgroundBehavior = .pauseAndRestore
+//        loadingView.translatesAutoresizingMaskIntoConstraints = false
+//        loadingView.topAnchor.constraint(equalTo: lottieContainer.topAnchor).isActive = true
+//        loadingView.bottomAnchor.constraint(equalTo: lottieContainer.bottomAnchor).isActive = true
+//        loadingView.trailingAnchor.constraint(equalTo: lottieContainer.trailingAnchor).isActive = true
+//        loadingView.leadingAnchor.constraint(equalTo: lottieContainer.leadingAnchor).isActive = true
+//        self.loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
+ //   }
 
     
     @objc func cancelTapped(_ sender: UIBarButtonItem) {

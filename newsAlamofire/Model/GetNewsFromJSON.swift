@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import Alamofire
-import SwiftyJSON
+//import Alamofire
+//import SwiftyJSON
 
 
 protocol FetchedNewDidSuccessfullyDelegate: class {
@@ -29,36 +29,45 @@ class GetNewsFromJSON {
         
         let url = MY_URL + city
         
-        AF.request(url, method: .get, parameters: params).responseJSON { [weak self] response in
-            
-            guard let self = self else { return }
-            
-            switch response.result {
-            case .success(let value):
-                let json = JSON(arrayLiteral: value)
-                let news = self.updateNewsData(json: json)
-                self.delegate?.retriveNews(news)
-                
-            case .failure(let error):
-                self.delegate?.retriveNewsDidFail(error.localizedDescription)
-            }
-        }
+//        AF.request(url, method: .get, parameters: params).responseJSON { [weak self] response in
+//
+//            guard let self = self else { return }
+//
+//            switch response.result {
+//            case .success(let value):
+//                let json = JSON(arrayLiteral: value)
+//                let news = self.updateNewsData(json: json)
+//                self.delegate?.retriveNews(news)
+//
+//            case .failure(let error):
+//                self.delegate?.retriveNewsDidFail(error.localizedDescription)
+//            }
+//        }
     }
 
-    private func updateNewsData(json : JSON) -> [News] {
-        
-        var newsContainer: [News] = []
-        let articles = json[0]["articles"].count
-        
-        for i in 0 ... articles - 1 {
-            let image = json[0]["articles"][i]["urlToImage"].stringValue
-            let title = json[0]["articles"][i]["title"].stringValue
-            let url = json[0]["articles"][i]["url"].stringValue
-            let auth = json[0]["articles"][i]["source"]["name"].stringValue
-            // let link = json[0]["articles"][i]["url"]
-            let news = News(author: auth, title: title, url: url, urlImage: image)
-            newsContainer.append(news)
-        }
-        return newsContainer
-    }
+//    private func updateNewsData(json : JSON) -> [News] {
+//
+//        var newsContainer: [News] = []
+//        let articles = json[0]["articles"].count
+//
+//        for i in 0 ... articles - 1 {
+//            let image = json[0]["articles"][i]["urlToImage"].stringValue
+//            let title = json[0]["articles"][i]["title"].stringValue
+//            let url = json[0]["articles"][i]["url"].stringValue
+//            let auth = json[0]["articles"][i]["source"]["name"].stringValue
+//            // let link = json[0]["articles"][i]["url"]
+//            let news = News(author: auth, title: title, url: url, urlImage: image)
+//            newsContainer.append(news)
+//        }
+//        return newsContainer
+//    }
 }
+
+
+
+
+
+
+
+
+

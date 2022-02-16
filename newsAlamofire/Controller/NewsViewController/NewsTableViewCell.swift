@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Lottie
+//import Lottie
 
 class NewsTableViewCell: UITableViewCell {
     
@@ -20,7 +20,7 @@ class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var urlLabel: UILabel!
     @IBOutlet weak var lottieContainer: UIView!
     
-    private var loadingView = AnimationView()
+    //private var loadingView = AnimationView()
         
     override func awakeFromNib() {
         super.awakeFromNib()

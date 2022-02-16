@@ -17,10 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
-        if let initialViewController = window?.rootViewController as? MainNavigationController {
-            coordinator = MainCoordinator(navigationController: initialViewController)
-        }
-        self.window?.makeKeyAndVisible()
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as! SearchViewController
+        let navigationController = UINavigationController(rootViewController: controller)
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
+        
+//        if let initialViewController = window?.rootViewController as? MainNavigationController {
+//            coordinator = MainCoordinator(navigationController: initialViewController)
+//        }
+//        self.window?.makeKeyAndVisible()
         return true
     }
 
