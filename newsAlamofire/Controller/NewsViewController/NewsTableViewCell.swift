@@ -19,35 +19,18 @@ class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var newsImage: UIImageView!
     @IBOutlet weak var urlLabel: UILabel!
     @IBOutlet weak var lottieContainer: UIView!
-    
-    //private var loadingView = AnimationView()
-        
+            
     override func awakeFromNib() {
         super.awakeFromNib()
         self.viewContainer.bounds = self.contentView.bounds
-//        let animation = Animation.named("news")
-//        setupAnimation(for: animation!)
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
+    func configureWith(_ article: ArticleMO) {
+        self.titleLable.text = article.title
+        self.authorLabel.text = article.author
+        self.urlLabel.text = article.url
+        self.downloadedFrom(link: article.urlToImage!)
     }
-    
-//    func setupAnimation(for animation: Animation) {
-//        loadingView.frame = animation.bounds
-//        loadingView.animation = animation
-//        loadingView.contentMode = .scaleAspectFill
-//        lottieContainer.addSubview(loadingView)
-//        loadingView.backgroundBehavior = .pauseAndRestore
-//        loadingView.translatesAutoresizingMaskIntoConstraints = false
-//        loadingView.topAnchor.constraint(equalTo: lottieContainer.topAnchor).isActive = true
-//        loadingView.bottomAnchor.constraint(equalTo: lottieContainer.bottomAnchor).isActive = true
-//        loadingView.trailingAnchor.constraint(equalTo: lottieContainer.trailingAnchor).isActive = true
-//        loadingView.leadingAnchor.constraint(equalTo: lottieContainer.leadingAnchor).isActive = true
-//        self.loadingView.play(fromProgress: 0, toProgress: 1, loopMode: .loop, completion: nil)
-//    }
     
     func downloadFromURL(url : URL, contentMode mode : UIView.ContentMode = .scaleAspectFit){
         contentMode = mode
@@ -64,8 +47,8 @@ class NewsTableViewCell: UITableViewCell {
             
             DispatchQueue.main.async() { () -> Void in
                 self.newsImage.image = image
-                //self.loadingView.stop()
             }
+            
         }.resume()
     }
     

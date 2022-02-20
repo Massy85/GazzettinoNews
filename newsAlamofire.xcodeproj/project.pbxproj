@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		03219292479E49DE3CA0D7FA /* Pods_newsAlamofireTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 387CABFCD72F9B00587C99F8 /* Pods_newsAlamofireTests.framework */; };
 		2A30F13C65B7A853E11E9F98 /* Pods_newsAlamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BB5D98930CBDB7A904093B0 /* Pods_newsAlamofire.framework */; };
+		704FDFA527C2867700314FF6 /* NewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704FDFA427C2867700314FF6 /* NewsViewModel.swift */; };
 		709BCCA627BD4443007E3BF9 /* NewsMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709BCCA527BD4443007E3BF9 /* NewsMO.swift */; };
 		709BCCA927BD448E007E3BF9 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709BCCA827BD448E007E3BF9 /* Client.swift */; };
 		709BCCAB27BD44B5007E3BF9 /* ClientAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709BCCAA27BD44B5007E3BF9 /* ClientAdapter.swift */; };
@@ -48,6 +49,7 @@
 		3160C3DAECEFF4C29FD6F3EB /* Pods-newsAlamofire.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-newsAlamofire.debug.xcconfig"; path = "Target Support Files/Pods-newsAlamofire/Pods-newsAlamofire.debug.xcconfig"; sourceTree = "<group>"; };
 		387CABFCD72F9B00587C99F8 /* Pods_newsAlamofireTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_newsAlamofireTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		701AC3D027BB94B500640106 /* newsAlamofireTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = newsAlamofireTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		704FDFA427C2867700314FF6 /* NewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModel.swift; sourceTree = "<group>"; };
 		7058025627BABC8100A24AEF /* GazzettinoNews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GazzettinoNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		709BCCA527BD4443007E3BF9 /* NewsMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsMO.swift; sourceTree = "<group>"; };
 		709BCCA827BD448E007E3BF9 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				B4D2518D22B0228B00211569 /* NewsViewController.swift */,
 				70E0B05E250B915400F00320 /* NewsTableViewCell.swift */,
 				70E0B05F250B915400F00320 /* NewsTableViewCell.xib */,
+				704FDFA427C2867700314FF6 /* NewsViewModel.swift */,
 			);
 			path = NewsViewController;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 				B4D2518E22B0228B00211569 /* NewsViewController.swift in Sources */,
 				B42E027D22B18FD20070C799 /* UIImage.swift in Sources */,
 				709BCCAD27BD4605007E3BF9 /* Cities.swift in Sources */,
+				704FDFA527C2867700314FF6 /* NewsViewModel.swift in Sources */,
 				709BCCA927BD448E007E3BF9 /* Client.swift in Sources */,
 				B466BDFA24193F550037DDB3 /* GetNewsFromJSON.swift in Sources */,
 				B4D251B122B028D100211569 /* News.swift in Sources */,
