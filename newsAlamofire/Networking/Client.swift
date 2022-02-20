@@ -39,7 +39,7 @@ extension Client: ClietProtocol {
                     }
                     let theJSONData = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
                     let theJSONText = String(data: theJSONData, encoding: .ascii)
-                    print("🚀🚀🚀 JSON string = \(theJSONText!)")
+                    //print("🚀🚀🚀 JSON string = \(theJSONText!)")
                     completion(data)
                 } catch {
                     completion(nil)

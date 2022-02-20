@@ -18,7 +18,7 @@ class SearchViewController: UIViewController {
     //MARK: - Properties
     
     private let viewModel = SearchViewModel()
-    private var selected: Int = 0
+
     //MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -41,36 +41,25 @@ class SearchViewController: UIViewController {
     //MARK: - Actions
     
     @IBAction func searchButtonWasPressed(_ sender: Any) {
-        let country = viewModel.getInitialOfCityNameAt(selected)
+        let country = viewModel.getInitial()
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "NewsViewController") as? NewsViewController
-        //controller = NewsViewController(country: country)
         guard let controller = controller else { return }
-       // let _ = controller.view
+        controller.cityName = viewModel.getCityName()
         controller.viewModel = NewsViewModel(country: country)
-            self.navigationController?.pushViewController(controller, animated: true)
-        
-        
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 }
 
 // MARK: - UIPickerViewDelegate, UIPickerViewDataSource
 extension SearchViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
+    func numberOfComponents(in pickerView: UIPickerView) -> Int { return 1 }
     
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return viewModel.cities.count
-    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int { return viewModel.cities.count }
     
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return viewModel.getCityNameAtIndex(row)
-    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? { return viewModel.getCityNameAtIndex(row) }
     
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selected = row
-    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) { viewModel.setIndexAt(row) }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var label = UILabel()

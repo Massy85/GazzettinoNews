@@ -13,8 +13,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    var coordinator: MainCoordinator?
-
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -23,11 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = UINavigationController(rootViewController: controller)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-        
-//        if let initialViewController = window?.rootViewController as? MainNavigationController {
-//            coordinator = MainCoordinator(navigationController: initialViewController)
-//        }
-//        self.window?.makeKeyAndVisible()
         return true
     }
 

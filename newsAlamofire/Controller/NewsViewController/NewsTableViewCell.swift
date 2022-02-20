@@ -26,13 +26,19 @@ class NewsTableViewCell: UITableViewCell {
     }
     
     func configureWith(_ article: ArticleMO) {
+        print("----> Article: \(article)")
         self.titleLable.text = article.title
         self.authorLabel.text = article.author
         self.urlLabel.text = article.url
-        self.downloadedFrom(link: article.urlToImage!)
+        
+        if let urlImage = article.urlToImage {
+            downloadedFrom(link: urlImage)
+        } else {
+            newsImage.image = UIImage()
+        }
     }
     
-    func downloadFromURL(url : URL, contentMode mode : UIView.ContentMode = .scaleAspectFit){
+    private func downloadFromURL(url : URL, contentMode mode : UIView.ContentMode = .scaleAspectFit) {
         contentMode = mode
         URLSession.shared.dataTask(with: url) { [weak self]
             (data, response, error) in
@@ -52,8 +58,7 @@ class NewsTableViewCell: UITableViewCell {
         }.resume()
     }
     
-    func downloadedFrom(link : String, contentMode mode : UIView.ContentMode = .scaleAspectFit){
-        
+    private func downloadedFrom(link : String, contentMode mode : UIView.ContentMode = .scaleAspectFit) {
         guard let url = URL(string: link) else { return }
         downloadFromURL(url: url, contentMode: mode)
     }
