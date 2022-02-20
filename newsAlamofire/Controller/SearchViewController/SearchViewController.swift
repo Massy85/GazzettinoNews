@@ -41,11 +41,16 @@ class SearchViewController: UIViewController {
     //MARK: - Actions
     
     @IBAction func searchButtonWasPressed(_ sender: Any) {
-        let city = viewModel.getInitialOfCityNameAt(selected)
+        let country = viewModel.getInitialOfCityNameAt(selected)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        var controller = storyboard.instantiateViewController(withIdentifier: "NewsViewController") as? NewsViewController
-        controller = NewsViewController(city: city)
-        navigationController?.pushViewController(controller!, animated: true)
+        let controller = storyboard.instantiateViewController(withIdentifier: "NewsViewController") as? NewsViewController
+        //controller = NewsViewController(country: country)
+        guard let controller = controller else { return }
+       // let _ = controller.view
+        controller.viewModel = NewsViewModel(country: country)
+            self.navigationController?.pushViewController(controller, animated: true)
+        
+        
     }
 }
 

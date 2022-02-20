@@ -12,46 +12,48 @@ import UIKit
 import SafariServices
 //import Lottie
 
-class NewsViewController: UIViewController, MainCoordinated, NewsManagerDelegate {
+class NewsViewController: UIViewController {
     
     //MARK: - Outlets
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var cityTitleLbl: UILabel!
-    @IBOutlet weak var lottieContainer: UIView!
-    @IBOutlet weak var containerView: UIView!
-    
-    //MARK: - Properties
-    var mainCoordinator: MainCoordinator?
-    var newManager: NewsManager?
-    var getNewsFromJSON: GetNewsFromJSON?
-    var dataSource: NewsDataSource?
-//    private var loadingView = AnimationView()
-    
-    var state: State = .loading {
+    @IBOutlet weak var lottieContainer: UIView! {
         didSet {
-            switch state {
-            case .loading:
-            //    let animation = Animation.named("news")
-               // setupAnimation(for: animation!)
-                containerView.isHidden = false
-            case .setupUI:
-                //loadingView.stop()
-                containerView.isHidden = true
-            }
+            lottieContainer.isHidden = true
+        }
+    }
+    @IBOutlet weak var containerView: UIView! {
+        didSet {
+            containerView.isHidden = true
         }
     }
     
-    //MARK: - Lifecycle
+    //MARK: - Properties
+    var viewModel: NewsViewModel?
     
-    convenience init(city: String) {
-        self.init(nibName: nil, bundle: nil)
-        print("-----> \(city)")
-    }
+    //MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        state = .loading
+        //state = .loading
+        let nib = UINib(nibName: "NewsTableViewCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: "newsCell")
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        
+        viewModel?.performRequest({ result in
+            switch result {
+            case .success(let newsMO):
+                DispatchQueue.main.async {
+                    //cityTitleLbl.text = newManager?.nomeCittà
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                print("error")
+            }
+        })
 
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -62,30 +64,12 @@ class NewsViewController: UIViewController, MainCoordinated, NewsManagerDelegate
         navigationController?.navigationBar.tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         let leftButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(cancelTapped(_:)))
         navigationItem.leftBarButtonItem = leftButton
-        
-        
-        let nib = UINib(nibName: "NewsTableViewCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: "newsCell")
-        tableView.delegate = self
-        
-        getNewsFromJSON = GetNewsFromJSON()
-        getNewsFromJSON?.delegate = self
-        getNewsFromJSON?.retriveNewsFromServer((newManager?.inizialeCittà)!)
-        cityTitleLbl.text = newManager?.nomeCittà
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
     }
-    
-    //MARK: - Navigation
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        mainCoordinator?.configure(viewController: segue.destination)
-    }
-    
     
     //MARK: - Actions
 
@@ -105,9 +89,9 @@ class NewsViewController: UIViewController, MainCoordinated, NewsManagerDelegate
 
     
     @objc func cancelTapped(_ sender: UIBarButtonItem) {
-        newManager?.nomeCittà = nil
-        newManager?.inizialeCittà = nil
-        mainCoordinator?.cancelTapped(self)
+//        newManager?.nomeCittà = nil
+//        newManager?.inizialeCittà = nil
+//        mainCoordinator?.cancelTapped(self)
     }
     
     func showSafariVC(url : String) {
@@ -121,20 +105,35 @@ class NewsViewController: UIViewController, MainCoordinated, NewsManagerDelegate
 }
 
 //MARK: - TableViewDelegate
-extension NewsViewController: UITableViewDelegate {
+extension NewsViewController: UITableViewDelegate, UITableViewDataSource {
     
 //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 //        300
 //        
 //    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel?.newsMO?.articles.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "newsCell", for: indexPath) as? NewsTableViewCell else { return UITableViewCell()}
+        
+        guard let news = viewModel?.newsMO?.articles[indexPath.row] else {
+            return UITableViewCell()
+        }
+        
+        cell.configureWith(news)
+        
+        return cell
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let auth = dataSource?.getAuthor(at: indexPath), let url = dataSource?.getURL(at: indexPath) else { return }
+        guard let auth_url = viewModel?.retriveAuthorAndURLAt(indexPath) else { return }
         
-        let alertController = UIAlertController(title: "Attention!", message: "News from: \(auth)\n Do you want open: \(url)?", preferredStyle: .actionSheet)
+        let alertController = UIAlertController(title: "Attention!", message: "News from: \(auth_url.auth)\n Do you want open: \(auth_url.url)?", preferredStyle: .actionSheet)
         alertController.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [weak self] (_) in
             guard let self = self else { return }
-            self.showSafariVC(url: url)
+            self.showSafariVC(url: auth_url.url)
         }))
         
         alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -142,35 +141,47 @@ extension NewsViewController: UITableViewDelegate {
     }
 }
 
-//MARK: - FetchedNewDidSuccessfullyDelegate
 
-extension NewsViewController: FetchedNewDidSuccessfullyDelegate {
-    func retriveNews(_ news: [News]) {
-        dataSource = NewsDataSource(news: news)
-        tableView.dataSource = dataSource
-        state = .setupUI
-        tableView.reloadData()
-    }
-    
-    func retriveNewsDidFail(_ error: String) {
-        debugPrint(error)
-        let controller = UIAlertController(title: "Attention !!!", message: "Please check your internet connection and try again.", preferredStyle: .alert)
-               let action = UIAlertAction(title: "OK", style: .cancel) { [weak self] (action) in
-                   guard let self = self else { return }
-            
-                self.mainCoordinator?.cancelTapped(self)
-               }
-               
-               controller.addAction(action)
-               self.present(controller, animated: true, completion: nil)
+extension NewsTableViewCell {
+    func configureWith(_ article: ArticleMO) {
+        self.titleLable.text = article.title
+        self.authorLabel.text = article.author
+        self.urlLabel.text = article.url
+        self.downloadedFrom(link: article.urlToImage!)
     }
 }
 
-//MARK: - State
-
-extension NewsViewController {
-    enum State {
-        case loading
-        case setupUI
+class NewsViewModel {
+    
+    private let client: Client
+    private(set) var newsMO: NewsMO?
+    private var error: Error?
+    
+    init(country: String) {
+        client = Client(country: country)
+    }
+    
+    func performRequest(_ completion: @escaping((Result) -> Void)) {
+        client.performRequest { data in
+            if let data = data {
+                ClientAdapter(data: data).parseResponse { result in
+                    switch result {
+                    case .success(let newsMO):
+                        self.newsMO = newsMO
+                    case .failure(let error):
+                        self.error = error
+                    }
+                    completion(result)
+                }
+            } else {
+                completion(.failure(.genericError))
+            }
+        }
+    }
+    
+    func retriveAuthorAndURLAt(_ indexPath: IndexPath) -> (auth: String, url: String) {
+        let auth = newsMO?.articles[indexPath.row].author ?? "Unknown"
+        let url = newsMO?.articles[indexPath.row].url ?? ""
+        return (auth, url)
     }
 }
